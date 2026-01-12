@@ -1,0 +1,8 @@
+config frps_ext 'main'
+	option enabled '0'
+	option client_file '/usr/bin/frps-ext'
+	option bind_addr '0.0.0.0'
+	option bind_port '7000'
+	option tcp_mux 'true'
+	option auth_method 'token'
+	option detailed_errors_to_client '1'

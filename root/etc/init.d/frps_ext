@@ -1,0 +1,418 @@
+#!/bin/sh /etc/rc.common
+#
+# Copyright 2020 lwz322 <lwz322@qq.com>
+# Licensed to the public under the MIT License.
+#
+
+START=99
+USE_PROCD=1
+
+NAME="frps_ext"
+CONFIG_FOLDER="/var/etc/$NAME"
+
+_log() {
+	local level="$1" ; shift
+	local msg="$*"
+	logger -p "daemon.$level" -t "$NAME" "$msg"
+	echo "[$level] $msg" >&2
+}
+
+_info() {
+	_log "info" "$@"
+}
+
+_err() {
+	_log "err" "$@"
+}
+
+frps_ext_section_validate() {
+	uci_validate_section "$NAME" "frps_ext" "$1" \
+		'enabled:bool:0' \
+		'client_file:file:/usr/bin/frps-ext' \
+		'run_user:string' \
+		'enable_logging:bool:0' \
+		'log_file:string:/var/log/frps_ext.log' \
+		'log_level:or("trace", "debug", "info", "warn", "error"):info' \
+		'log_max_days:uinteger:3' \
+		'disable_log_color:or("true", "false")' \
+		'bind_addr:string:0.0.0.0' \
+		'bind_port:port:7000' \
+		'kcp_bind_port:port' \
+		'quic_bind_port:port' \
+		'proxy_bind_addr:string' \
+		'vhost_http_port:port' \
+		'vhost_https_port:port' \
+		'vhost_http_timeout:integer:60' \
+		'tcpmux_httpconnect_port:port' \
+		'tcpmux_passthrough:bool:0' \
+		'subdomain_host:string' \
+		'custom_404_page:string' \
+		'enable_prometheus:bool:0' \
+		'detailed_errors_to_client:bool:1' \
+		'max_ports_per_client:uinteger:0' \
+		'user_conn_timeout:integer:10' \
+		'udp_packet_size:uinteger:1500' \
+		'nathole_analysis_data_reserve_hours:uinteger:168' \
+		'allow_ports:list(string)' \
+		'auth_method:or("token","oidc"):token' \
+		'auth_token:string' \
+		'auth_token_source_file:file' \
+		'auth_additional_scopes:list(string)' \
+		'auth_oidc_issuer:string' \
+		'auth_oidc_audience:string' \
+		'auth_oidc_skip_expiry_check:bool:0' \
+		'auth_oidc_skip_issuer_check:bool:0' \
+		'web_addr:string:127.0.0.1' \
+		'web_port:port' \
+		'web_user:string' \
+		'web_password:string' \
+		'web_assets_dir:string' \
+		'web_pprof_enable:bool:0' \
+		'web_tls_cert_file:file' \
+		'web_tls_key_file:file' \
+		'transport_max_pool_count:uinteger:5' \
+		'tcp_mux:or("true", "false"):true' \
+		'tcp_mux_keepalive_interval:integer:30' \
+		'tcp_keepalive:integer:7200' \
+		'tcp_fast_open:bool:0' \
+		'tcp_fast_open_queue:integer:0' \
+		'heartbeat_timeout:integer:-1' \
+		'quic_keepalive_period:integer:10' \
+		'quic_max_idle_timeout:integer:30' \
+		'quic_max_incoming_streams:integer:100000' \
+		'tls_force:bool:0' \
+		'tls_cert_file:file' \
+		'tls_key_file:file' \
+		'tls_trusted_ca_file:file' \
+		'ssh_gateway_bind_port:port' \
+		'ssh_gateway_private_key_file:file' \
+		'ssh_gateway_auto_gen_private_key_path:string' \
+		'ssh_gateway_authorized_keys_file:file' \
+		'extra_setting:list(string)'
+}
+
+http_plugin_section_validate() {
+	uci_validate_section "$NAME" "http_plugin" "$1" \
+		'enabled:bool:1' \
+		'name:string' \
+		'addr:string' \
+		'path:string' \
+		'ops:list(string)' \
+		'tls_verify:bool:0'
+}
+
+client_file_validate() {
+	local file="$1"
+
+	test -f "$file" || return 1
+	test -x "$file" || chmod 755 "$file"
+
+	eval "$file" -h 2>/dev/null | grep -q "frps"
+	return $?
+}
+
+# --- TOML helpers (compatible with luci-app-frpc-ext style) ---
+_toml_escape() {
+	echo "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'
+}
+
+_toml_quote() {
+	printf "\"%s\"" "$(_toml_escape "$1")"
+}
+
+_toml_kv_string() {
+	local file="$1"
+	local key="$2"
+	local val="$3"
+	[ -n "$val" ] && printf "%s = %s\n" "$key" "$(_toml_quote "$val")" >>"$file"
+}
+
+_toml_kv_int() {
+	local file="$1"
+	local key="$2"
+	local val="$3"
+	[ -n "$val" ] && printf "%s = %s\n" "$key" "$val" >>"$file"
+}
+
+_toml_kv_bool() {
+	local file="$1"
+	local key="$2"
+	local val="$3"
+
+	[ -z "$val" ] && return 0
+	if [ "x$val" = "xtrue" ] || [ "x$val" = "x1" ] ; then
+		printf "%s = true\n" "$key" >>"$file"
+	else
+		printf "%s = false\n" "$key" >>"$file"
+	fi
+}
+
+_toml_collect_array_item() {
+	local item="$1"
+	[ -z "$item" ] && return 0
+	if [ -n "$_TOML_ARRAY_OUT" ] ; then
+		_TOML_ARRAY_OUT="$_TOML_ARRAY_OUT, $(_toml_quote "$item")"
+	else
+		_TOML_ARRAY_OUT="$(_toml_quote "$item")"
+	fi
+}
+
+_append_toml_string_array_from_list() {
+	local section="$1"
+	local option="$2"
+	local file="$3"
+	local key="$4"
+
+	_TOML_ARRAY_OUT=""
+	config_list_foreach "$section" "$option" _toml_collect_array_item
+	[ -n "$_TOML_ARRAY_OUT" ] && printf "%s = [%s]\n" "$key" "$_TOML_ARRAY_OUT" >>"$file"
+}
+
+ALLOW_PORTS_COUNT=0
+_write_allow_port_item() {
+	local item="$1"
+	local file="$2"
+
+	item="$(echo "$item" | sed 's/^ *//; s/ *$//')"
+	[ -z "$item" ] && return 0
+
+	case "$item" in
+		*-*)
+			local start="${item%-*}"
+			local end="${item#*-}"
+			[ -n "$start" ] && [ -n "$end" ] || return 0
+			printf "  { start = %s, end = %s },\n" "$start" "$end" >>"$file"
+			ALLOW_PORTS_COUNT=$((ALLOW_PORTS_COUNT + 1))
+			;;
+		*)
+			printf "  { single = %s },\n" "$item" >>"$file"
+			ALLOW_PORTS_COUNT=$((ALLOW_PORTS_COUNT + 1))
+			;;
+	esac
+}
+
+_append_allow_ports() {
+	local section="$1"
+	local file="$2"
+	local tmp
+
+	ALLOW_PORTS_COUNT=0
+	tmp="$(mktemp /tmp/frps_ext-allowports-XXXXXX)"
+	printf "allowPorts = [\n" >>"$tmp"
+	config_list_foreach "$section" "allow_ports" _write_allow_port_item "$tmp"
+	printf "]\n\n" >>"$tmp"
+
+	if [ "$ALLOW_PORTS_COUNT" -gt 0 ] ; then
+		cat "$tmp" >>"$file"
+	fi
+	rm -f "$tmp"
+}
+
+add_http_plugin() {
+	local section="$1"
+	local file="$2"
+
+	if ! http_plugin_section_validate "$section" ; then
+		_err "HTTP plugin config validate failed: \"$section\""
+		return 1
+	fi
+	[ "x$enabled" = "x0" ] && return 0
+
+	[ -z "$name" ] && return 0
+	[ -z "$addr" ] && return 0
+	[ -z "$path" ] && return 0
+
+	echo "[[httpPlugins]]" >>"$file"
+	_toml_kv_string "$file" "name" "$name"
+	_toml_kv_string "$file" "addr" "$addr"
+	_toml_kv_string "$file" "path" "$path"
+	_append_toml_string_array_from_list "$section" "ops" "$file" "ops"
+	_toml_kv_bool "$file" "tlsVerify" "$tls_verify"
+	echo "" >>"$file"
+}
+
+add_raw_line() {
+	local line="$1"
+	local file="$2"
+	[ -n "$line" ] && printf "%s\n" "$line" >>"$file"
+}
+
+_create_log() {
+	local file="$1"
+
+	echo "[log]" >>"$file"
+	if [ "x$enable_logging" = "x1" ] ; then
+		[ -z "$log_file" ] && log_file="/var/log/frps_ext.log"
+		_toml_kv_string "$file" "to" "$log_file"
+		_toml_kv_string "$file" "level" "$log_level"
+		_toml_kv_int "$file" "maxDays" "$log_max_days"
+		_toml_kv_bool "$file" "disablePrintColor" "$disable_log_color"
+
+		if [ -f "$log_file" ] ; then
+			echo > "$log_file"
+		else
+			local log_folder
+			log_folder="$(dirname "$log_file")"
+			test -d "$log_folder" || mkdir -p "$log_folder"
+		fi
+
+		if [ -n "$run_user" ] && ( user_exists "$run_user" ) ; then
+			chmod 644 "$log_file"
+			chown "$run_user" "$log_file"
+		else
+			run_user=""
+		fi
+	else
+		_toml_kv_string "$file" "to" "console"
+	fi
+	echo "" >>"$file"
+}
+
+create_config_file() {
+	local section="$1"
+	local config_file="$2"
+	local tmp_file
+
+	tmp_file="$(mktemp /tmp/frps_ext-XXXXXX)"
+
+	# Root keys.
+	_toml_kv_string "$tmp_file" "bindAddr" "$bind_addr"
+	_toml_kv_int "$tmp_file" "bindPort" "$bind_port"
+	_toml_kv_int "$tmp_file" "kcpBindPort" "$kcp_bind_port"
+	_toml_kv_int "$tmp_file" "quicBindPort" "$quic_bind_port"
+	_toml_kv_string "$tmp_file" "proxyBindAddr" "$proxy_bind_addr"
+	_toml_kv_int "$tmp_file" "vhostHTTPPort" "$vhost_http_port"
+	_toml_kv_int "$tmp_file" "vhostHTTPSPort" "$vhost_https_port"
+	_toml_kv_int "$tmp_file" "vhostHTTPTimeout" "$vhost_http_timeout"
+	_toml_kv_int "$tmp_file" "tcpmuxHTTPConnectPort" "$tcpmux_httpconnect_port"
+	_toml_kv_bool "$tmp_file" "tcpmuxPassthrough" "$tcpmux_passthrough"
+	_toml_kv_string "$tmp_file" "subDomainHost" "$subdomain_host"
+	_toml_kv_string "$tmp_file" "custom404Page" "$custom_404_page"
+	_toml_kv_bool "$tmp_file" "enablePrometheus" "$enable_prometheus"
+	_toml_kv_bool "$tmp_file" "detailedErrorsToClient" "$detailed_errors_to_client"
+	_toml_kv_int "$tmp_file" "maxPortsPerClient" "$max_ports_per_client"
+	_toml_kv_int "$tmp_file" "userConnTimeout" "$user_conn_timeout"
+	_toml_kv_int "$tmp_file" "udpPacketSize" "$udp_packet_size"
+	_toml_kv_int "$tmp_file" "natholeAnalysisDataReserveHours" "$nathole_analysis_data_reserve_hours"
+	echo "" >>"$tmp_file"
+
+	# allowPorts.
+	_append_allow_ports "$section" "$tmp_file"
+
+	# auth.
+	echo "[auth]" >>"$tmp_file"
+	_toml_kv_string "$tmp_file" "method" "$auth_method"
+	_append_toml_string_array_from_list "$section" "auth_additional_scopes" "$tmp_file" "additionalScopes"
+
+	# token or tokenSource (file only)
+	if [ -n "$auth_token" ] ; then
+		_toml_kv_string "$tmp_file" "token" "$auth_token"
+	elif [ -n "$auth_token_source_file" ] ; then
+		_toml_kv_string "$tmp_file" "tokenSource.type" "file"
+		_toml_kv_string "$tmp_file" "tokenSource.file.path" "$auth_token_source_file"
+	fi
+	_toml_kv_string "$tmp_file" "oidc.issuer" "$auth_oidc_issuer"
+	_toml_kv_string "$tmp_file" "oidc.audience" "$auth_oidc_audience"
+	_toml_kv_bool "$tmp_file" "oidc.skipExpiryCheck" "$auth_oidc_skip_expiry_check"
+	_toml_kv_bool "$tmp_file" "oidc.skipIssuerCheck" "$auth_oidc_skip_issuer_check"
+	echo "" >>"$tmp_file"
+
+	_create_log "$tmp_file"
+
+	# transport.
+	echo "[transport]" >>"$tmp_file"
+	_toml_kv_int "$tmp_file" "maxPoolCount" "$transport_max_pool_count"
+	_toml_kv_bool "$tmp_file" "tcpMux" "$tcp_mux"
+	_toml_kv_int "$tmp_file" "tcpMuxKeepaliveInterval" "$tcp_mux_keepalive_interval"
+	_toml_kv_int "$tmp_file" "tcpKeepalive" "$tcp_keepalive"
+	_toml_kv_bool "$tmp_file" "tcpFastOpen" "$tcp_fast_open"
+	_toml_kv_int "$tmp_file" "tcpFastOpenQueue" "$tcp_fast_open_queue"
+	_toml_kv_int "$tmp_file" "heartbeatTimeout" "$heartbeat_timeout"
+	_toml_kv_int "$tmp_file" "quic.keepalivePeriod" "$quic_keepalive_period"
+	_toml_kv_int "$tmp_file" "quic.maxIdleTimeout" "$quic_max_idle_timeout"
+	_toml_kv_int "$tmp_file" "quic.maxIncomingStreams" "$quic_max_incoming_streams"
+	_toml_kv_bool "$tmp_file" "tls.force" "$tls_force"
+	_toml_kv_string "$tmp_file" "tls.certFile" "$tls_cert_file"
+	_toml_kv_string "$tmp_file" "tls.keyFile" "$tls_key_file"
+	_toml_kv_string "$tmp_file" "tls.trustedCaFile" "$tls_trusted_ca_file"
+	echo "" >>"$tmp_file"
+
+	# webServer.
+	echo "[webServer]" >>"$tmp_file"
+	_toml_kv_string "$tmp_file" "addr" "$web_addr"
+	_toml_kv_int "$tmp_file" "port" "$web_port"
+	_toml_kv_string "$tmp_file" "user" "$web_user"
+	_toml_kv_string "$tmp_file" "password" "$web_password"
+	_toml_kv_string "$tmp_file" "assetsDir" "$web_assets_dir"
+	_toml_kv_bool "$tmp_file" "pprofEnable" "$web_pprof_enable"
+	_toml_kv_string "$tmp_file" "tls.certFile" "$web_tls_cert_file"
+	_toml_kv_string "$tmp_file" "tls.keyFile" "$web_tls_key_file"
+	echo "" >>"$tmp_file"
+
+	# sshTunnelGateway.
+	if [ -n "$ssh_gateway_bind_port" ] && [ "$ssh_gateway_bind_port" -gt 0 ] ; then
+		echo "[sshTunnelGateway]" >>"$tmp_file"
+		_toml_kv_int "$tmp_file" "bindPort" "$ssh_gateway_bind_port"
+		_toml_kv_string "$tmp_file" "privateKeyFile" "$ssh_gateway_private_key_file"
+		_toml_kv_string "$tmp_file" "autoGenPrivateKeyPath" "$ssh_gateway_auto_gen_private_key_path"
+		_toml_kv_string "$tmp_file" "authorizedKeysFile" "$ssh_gateway_authorized_keys_file"
+		echo "" >>"$tmp_file"
+	fi
+
+	# httpPlugins.
+	config_foreach add_http_plugin "http_plugin" "$tmp_file"
+
+	# extra raw toml lines.
+	config_list_foreach "$section" "extra_setting" add_raw_line "$tmp_file"
+
+	cat "$tmp_file" >"$config_file"
+	local rc="$?"
+	rm -f "$tmp_file"
+	return "$rc"
+}
+
+start_instance() {
+	local section="$1"
+
+	if ! frps_ext_section_validate "$section" ; then
+		_err "Config validate failed."
+		return 1
+	fi
+
+	if [ "x$enabled" != "x1" ] ; then
+		_info "Instance \"$section\" disabled."
+		return 1
+	fi
+
+	if [ -z "$client_file" ] || ( ! client_file_validate "$client_file" ) ; then
+		_err "Client file not valid."
+		return 1
+	fi
+
+	test -d "$CONFIG_FOLDER" || mkdir -p "$CONFIG_FOLDER"
+	local config_file="$CONFIG_FOLDER/frps_ext.$section.toml"
+
+	if ! create_config_file "$section" "$config_file" ; then
+		_err "Could not create config file: \"$config_file\""
+		return 1
+	fi
+
+	procd_open_instance "$NAME.$section"
+	procd_set_param command "$client_file"
+	procd_append_param command -c "$config_file"
+	procd_set_param respawn
+	procd_set_param file "$config_file"
+
+	[ -n "$run_user" ] && procd_set_param user "$run_user"
+
+	procd_close_instance
+}
+
+service_triggers() {
+	procd_add_reload_trigger "$NAME"
+}
+
+start_service() {
+	config_load "$NAME"
+	config_foreach start_instance "frps_ext"
+}

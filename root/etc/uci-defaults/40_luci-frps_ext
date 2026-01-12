@@ -1,0 +1,34 @@
+#!/bin/sh
+
+uci -q batch <<-EOF >/dev/null
+	delete ucitrack.@frps_ext[-1]
+	add ucitrack frps_ext
+	set ucitrack.@frps_ext[-1].init=frps_ext
+	commit ucitrack
+EOF
+
+# Ensure there is a frps_ext main section.
+section=$(uci -q get frps_ext.@frps_ext[-1])
+if [ -z "$section" ]; then
+	uci -q add frps_ext frps_ext
+	section=$(uci -q get frps_ext.@frps_ext[-1])
+fi
+
+# Ensure the last frps_ext section is named "main".
+if [ "x$section" != "xmain" ]; then
+	uci -q batch <<-EOF >/dev/null
+		rename frps_ext.@frps_ext[-1]="main"
+		set frps_ext.main.enabled="0"
+		commit frps_ext
+	EOF
+fi
+
+# Set default binary path if empty.
+client_file=$(uci -q get frps_ext.main.client_file)
+if [ -z "$client_file" ]; then
+	uci -q set frps_ext.main.client_file='/usr/bin/frps-ext'
+	uci -q commit frps_ext
+fi
+
+rm -rf /tmp/luci-indexcache /tmp/luci-modulecache
+exit 0

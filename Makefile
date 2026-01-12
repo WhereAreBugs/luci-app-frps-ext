@@ -5,8 +5,8 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=luci-app-frps
-PKG_VERSION:=0.0.2
+PKG_NAME:=luci-app-frps-ext
+PKG_VERSION:=1.0.0
 PKG_RELEASE:=1
 
 PKG_LICENSE:=MIT
@@ -14,11 +14,12 @@ PKG_LICENSE_FILES:=LICENSE
 
 PKG_MAINTAINER:=lwz322 <lwz322@qq.com>
 
-LUCI_TITLE:=LuCI support for Frps
+LUCI_TITLE:=LuCI support for Frps (ext)
+LUCI_DEPENDS:=+frps-ext
 LUCI_PKGARCH:=all
 
 define Package/$(PKG_NAME)/conffiles
-/etc/config/frps
+/etc/config/frps_ext
 endef
 
 include $(TOPDIR)/feeds/luci/luci.mk
@@ -26,12 +27,12 @@ include $(TOPDIR)/feeds/luci/luci.mk
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 if [ -z "$${IPKG_INSTROOT}" ]; then
-	( . /etc/uci-defaults/40_luci-frps ) && rm -f /etc/uci-defaults/40_luci-frps
+	( . /etc/uci-defaults/40_luci-frps_ext ) && rm -f /etc/uci-defaults/40_luci-frps_ext
 fi
 
-chmod 755 "$${IPKG_INSTROOT}/etc/init.d/frps" >/dev/null 2>&1
-ln -sf "../init.d/frps" \
-	"$${IPKG_INSTROOT}/etc/rc.d/S99frps" >/dev/null 2>&1
+chmod 755 "$${IPKG_INSTROOT}/etc/init.d/frps_ext" >/dev/null 2>&1
+ln -sf "../init.d/frps_ext" \
+	"$${IPKG_INSTROOT}/etc/rc.d/S99frps_ext" >/dev/null 2>&1
 exit 0
 endef
 
