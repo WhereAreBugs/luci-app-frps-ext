@@ -15,7 +15,7 @@ PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=lwz322 <lwz322@qq.com>
 
 LUCI_TITLE:=LuCI support for Frps (ext)
-LUCI_DEPENDS:=+frps-ext
+LUCI_DEPENDS:=+luci-base +frps-ext
 LUCI_PKGARCH:=all
 
 define Package/$(PKG_NAME)/conffiles
