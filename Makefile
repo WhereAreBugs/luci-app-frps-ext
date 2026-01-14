@@ -27,7 +27,10 @@ include $(TOPDIR)/feeds/luci/luci.mk
 define Package/$(PKG_NAME)/postinst
 #!/bin/sh
 if [ -z "$${IPKG_INSTROOT}" ]; then
-	( . /etc/uci-defaults/40_luci-frps_ext ) && rm -f /etc/uci-defaults/40_luci-frps_ext
+	if [ -f "/etc/uci-defaults/40_luci-frps_ext" ]; then
+		. /etc/uci-defaults/40_luci-frps_ext
+		rm -f /etc/uci-defaults/40_luci-frps_ext
+	fi
 fi
 
 chmod 755 "$${IPKG_INSTROOT}/etc/init.d/frps_ext" >/dev/null 2>&1
