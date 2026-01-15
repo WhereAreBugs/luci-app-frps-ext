@@ -3,541 +3,541 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 
 msgid "-- default --"
-msgstr "-- 默认 --"
+msgstr ""
 
 msgid "Additional scopes"
-msgstr "附加作用域"
+msgstr ""
 
 msgid "Addr"
-msgstr "地址"
+msgstr ""
 
 msgid "Address frps listens on; set to 0.0.0.0 to accept connections on all interfaces."
-msgstr "frps 监听地址，设为 0.0.0.0 接受所有接口连接。"
+msgstr ""
 
 msgid "Advanced Options"
-msgstr "高级选项"
+msgstr ""
 
 msgid "Allow ports"
-msgstr "允许的端口"
+msgstr ""
 
 msgid "Append raw TOML lines for advanced use; one entry per line."
-msgstr "追加原始 TOML 行用于高级配置；一行一条。"
+msgstr ""
 
 msgid "Auth Options"
-msgstr "认证选项"
+msgstr ""
 
 msgid "Auth method"
-msgstr "认证方式"
+msgstr ""
 
 msgid "Auth token"
-msgstr "认证令牌"
+msgstr ""
 
 msgid "Backend service address (ip:port) for this plugin."
-msgstr "插件后端服务地址 (ip:port)。"
+msgstr ""
 
 msgid "Backlog size for TCP Fast Open SYN queue."
-msgstr "TCP Fast Open SYN 队列长度。"
+msgstr ""
 
 msgid "Base domain for subdomain routing, e.g. example.com -> *.example.com."
-msgstr "子域名路由基础域名，例如 example.com -> *.example.com。"
+msgstr ""
 
 msgid "Bind address"
-msgstr "绑定地址"
+msgstr ""
 
 msgid "Bind port"
-msgstr "绑定端口"
+msgstr ""
 
 msgid "CA bundle used to verify client certificates."
-msgstr "用于验证客户端证书的 CA 证书集合。"
+msgstr ""
 
 msgid "Can't get client version"
-msgstr "无法获取到客户端版本"
+msgstr ""
 
 msgid "Caps per-proxy pool_count requested by frpc; excess connections are trimmed to this value."
-msgstr "限制每个代理的 pool_count，超出部分将被裁剪。"
+msgstr ""
 
 msgid "Certificate file for dashboard HTTPS."
-msgstr "仪表盘 HTTPS 证书文件。"
+msgstr ""
 
 msgid "Client authentication method (token or OIDC)."
-msgstr "客户端认证方式（token 或 OIDC）。"
+msgstr ""
 
 msgid "Client file"
-msgstr "客户端文件"
+msgstr ""
 
 msgid "Collecting data..."
-msgstr "正在收集数据..."
+msgstr ""
 
 msgid "Common Settings"
-msgstr "通用设置"
+msgstr ""
 
 msgid "Custom 404 page"
-msgstr "自定义 404 页面"
+msgstr ""
 
 msgid "Custom static assets directory for dashboard; keep empty to use built-in assets."
-msgstr "仪表盘自定义静态资源目录；留空使用内置资源。"
+msgstr ""
 
 msgid "Dashboard basic auth password."
-msgstr "仪表盘基本认证密码。"
+msgstr ""
 
 msgid "Dashboard basic auth username."
-msgstr "仪表盘基本认证用户名。"
+msgstr ""
 
 msgid "Dashboard bind address."
-msgstr "仪表盘绑定地址。"
+msgstr ""
 
 msgid "Dashboard is enabled only if this is set"
-msgstr "仅在设置了此值后才启用面板功能"
+msgstr ""
 
 msgid "Dashboard port; leave empty to disable dashboard."
-msgstr "仪表盘端口；留空则禁用仪表盘。"
+msgstr ""
 
 msgid "Debug"
-msgstr "调试"
+msgstr ""
 
 msgid "Detailed errors to client"
-msgstr "向客户端返回详细错误"
+msgstr ""
 
 msgid "Disable log color"
-msgstr "禁用日志颜色"
+msgstr ""
 
 msgid "Each item: single port (e.g. 3001) or range (e.g. 2000-3000)"
-msgstr "每项可为单端口（如 3001）或端口范围（如 2000-3000）"
+msgstr ""
 
 msgid "Enable Prometheus"
-msgstr "启用 Prometheus"
+msgstr ""
 
 msgid "Enable SSH tunnel gateway on this port; leave empty to disable."
-msgstr "在此端口启用 SSH 隧道网关；留空禁用。"
+msgstr ""
 
 msgid "Enable TCP Fast Open on listening sockets (requires kernel support)."
-msgstr "在监听端口启用 TCP Fast Open（需要内核支持）。"
+msgstr ""
 
 msgid "Enable TCP stream multiplexing between frpc and frps"
-msgstr "启用 frpc 与 frps 之间的 TCP 流复用"
+msgstr ""
 
 msgid "Enable frps service at boot and keep it running."
-msgstr "开机自启 frps 并保持运行。"
+msgstr ""
 
 msgid "Enable logging"
-msgstr "启用日志"
+msgstr ""
 
 msgid "Enable or disable this HTTP plugin entry."
-msgstr "启用或禁用该 HTTP 插件条目。"
+msgstr ""
 
 msgid "Enable pprof"
-msgstr "启用 pprof"
+msgstr ""
 
 msgid "Enabled"
-msgstr "已启用"
+msgstr ""
 
 msgid "Error"
-msgstr "错误"
+msgstr ""
 
 msgid "Example: Login, NewProxy"
-msgstr "示例：Login, NewProxy"
+msgstr ""
 
 msgid "Expected audience claim for OIDC tokens."
-msgstr "OIDC token 的 audience 期望值。"
+msgstr ""
 
 msgid "Expose /metrics for Prometheus scraping on the dashboard listener."
-msgstr "在仪表盘端口暴露 /metrics 供 Prometheus 抓取。"
+msgstr ""
 
 msgid "Expose /metrics on web server"
-msgstr "在 Web 服务器上暴露 /metrics"
+msgstr ""
 
 msgid "Expose Go pprof endpoints on the dashboard for profiling."
-msgstr "在仪表盘上暴露 Go pprof 端点用于性能分析。"
+msgstr ""
 
 msgid "Expose TCPMux over HTTP CONNECT on this port; leave empty to disable."
-msgstr "在该端口通过 HTTP CONNECT 暴露 TCPMux；留空禁用。"
+msgstr ""
 
 msgid "Extra TOML lines"
-msgstr "额外 TOML 行"
+msgstr ""
 
 msgid "Extra scopes allowed for clients (e.g. HeartBeats, NewWorkConns)."
-msgstr "允许的额外作用域（如 HeartBeats、NewWorkConns）。"
+msgstr ""
 
 msgid "FRPS Server setting"
-msgstr "Frps 服务器设定"
+msgstr ""
 
 msgid "For more information, please visit: %s"
-msgstr "获取更多信息，请访问：%s"
+msgstr ""
 
 msgid "Force clients to use TLS for control/work connections."
-msgstr "强制客户端使用 TLS 建立控制/工作连接。"
+msgstr ""
 
 msgid "Format: ip:port"
-msgstr "格式：ip:port"
+msgstr ""
 
 msgid "Forward TCPMux payload without extra processing; disables layer-7 handling."
-msgstr "TCPMux 负载直接透传，不做额外处理。"
+msgstr ""
 
 msgid "Frp is a fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
-msgstr "Frp 是一个快速的反向代理工具，帮助你将内网服务暴露到公网。"
+msgstr ""
 
 msgid "Frps (ext)"
-msgstr "Frps（扩展版）"
+msgstr ""
 
 msgid "General Options"
-msgstr "常规选项"
+msgstr ""
 
 msgid "HTTP Plugins"
-msgstr "HTTP 插件"
+msgstr ""
 
 msgid "HTTP path the plugin will be invoked on."
-msgstr "插件被调用的 HTTP 路径。"
+msgstr ""
 
 msgid "Heartbeat timeout (s)"
-msgstr "心跳超时（秒）"
+msgstr ""
 
 msgid "If enabled, frps won't modify the TCPMux traffic"
-msgstr "启用后，frps 不会修改 TCPMux 流量"
+msgstr ""
 
 msgid "Info"
-msgstr "信息"
+msgstr ""
 
 msgid "Interval for QUIC keepalive pings in seconds."
-msgstr "QUIC keepalive 间隔（秒）。"
+msgstr ""
 
 msgid "Interval in seconds for TCP mux keepalive pings."
-msgstr "TCP 复用 keepalive 间隔（秒）。"
+msgstr ""
 
 msgid "Invalid client file"
-msgstr "客户端文件无效"
+msgstr ""
 
 msgid "Issuer URL for OIDC tokens."
-msgstr "OIDC token 的 issuer 地址。"
+msgstr ""
 
 msgid "KCP bind port"
-msgstr "KCP绑定端口"
+msgstr ""
 
 msgid "Limit how many ports a single client can open; 0 means unlimited."
-msgstr "限制单个客户端可打开的端口数；0 表示不限。"
+msgstr ""
 
 msgid "Limit of concurrent incoming QUIC streams per session."
-msgstr "单个 QUIC 会话允许的最大入站流数量。"
+msgstr ""
 
 msgid "Limits"
-msgstr "限制"
+msgstr ""
 
 msgid "Listen Options"
-msgstr "监听选项"
+msgstr ""
 
 msgid "Log Options"
-msgstr "日志选项"
+msgstr ""
 
 msgid "Log file"
-msgstr "日志文件"
+msgstr ""
 
 msgid "Log level"
-msgstr "日志等级"
+msgstr ""
 
 msgid "Log max days"
-msgstr "日志保存天数"
+msgstr ""
 
 msgid "Log output path; default is /var/log/frps_ext.log."
-msgstr "日志输出路径，默认 /var/log/frps_ext.log。"
+msgstr ""
 
 msgid "Main TCP port used for control/work connections from frpc."
-msgstr "控制/工作连接使用的主 TCP 端口。"
+msgstr ""
 
 msgid "Max pool count"
-msgstr "最大连接数"
+msgstr ""
 
 msgid "Max ports per client"
-msgstr "单客户端最大端口数"
+msgstr ""
 
 msgid "Maximum UDP packet size forwarded by frps."
-msgstr "frps 转发的最大 UDP 包大小。"
+msgstr ""
 
 msgid "Maximum idle duration before closing QUIC session."
-msgstr "QUIC 会话的最大空闲时长，超时后关闭。"
+msgstr ""
 
 msgid "Minimum severity written to the log."
-msgstr "写入日志的最低级别。"
+msgstr ""
 
 msgid "NAT hole analysis reserve hours"
-msgstr "NAT 打洞分析数据保留时长（小时）"
+msgstr ""
 
 msgid "Name"
-msgstr "名称"
+msgstr ""
 
 msgid "Negative disables TCP keepalive probes"
-msgstr "为负值时禁用 TCP keepalive 探测"
+msgstr ""
 
 msgid "Negative disables application heartbeat; default depends on TCPMux"
-msgstr "为负值时禁用应用层心跳，默认值取决于 TCPMux"
+msgstr ""
 
 msgid "Not Running"
-msgstr "服务未运行"
+msgstr ""
 
 msgid "OIDC audience"
-msgstr "OIDC 受众 (audience)"
+msgstr ""
 
 msgid "OIDC issuer"
-msgstr "OIDC 签发者 (issuer)"
+msgstr ""
 
 msgid "OIDC skip expiry check"
-msgstr "OIDC 跳过过期检查"
+msgstr ""
 
 msgid "OIDC skip issuer check"
-msgstr "OIDC 跳过签发者检查"
+msgstr ""
 
 msgid "Only accept TLS-encrypted connections"
-msgstr "仅接受 TLS 加密连接"
+msgstr ""
 
 msgid "Operations handled by this plugin, e.g. Login or NewProxy."
-msgstr "插件处理的操作，例如 Login 或 NewProxy。"
+msgstr ""
 
 msgid "Ops"
-msgstr "操作"
+msgstr ""
 
 msgid "Optional values: HeartBeats, NewWorkConns"
-msgstr "可选值：HeartBeats, NewWorkConns"
+msgstr ""
 
 msgid "Optional: UDP port used for KCP protocol, empty means disabled"
-msgstr "可选：KCP 协议使用的 UDP 端口，留空则禁用"
+msgstr ""
 
 msgid "Optional: UDP port used for QUIC protocol, empty means disabled"
-msgstr "可选：QUIC 协议使用的 UDP 端口，留空则禁用"
+msgstr ""
 
 msgid "Optional: address that proxy listeners bind to"
-msgstr "可选：代理监听绑定的地址"
+msgstr ""
 
 msgid "Optional: enable tcpmux HTTP CONNECT by setting a port"
-msgstr "可选：设置端口以启用 tcpmux HTTP CONNECT"
+msgstr ""
 
 msgid "Optional: load token from file; mutually exclusive with auth.token"
-msgstr "可选：从文件读取令牌，与 auth.token 互斥"
+msgstr ""
 
 msgid "Override bind_addr for proxy listeners (TCP/UDP/http/https)."
-msgstr "为代理监听覆盖 bind_addr（TCP/UDP/http/https）。"
+msgstr ""
 
 msgid "Path"
-msgstr "路径"
+msgstr ""
 
 msgid "Path to a custom 404 response page for vhost requests."
-msgstr "自定义 404 响应页面路径。"
+msgstr ""
 
 msgid "Path to the frps binary; used for version checks and startup."
-msgstr "frps 可执行文件路径，用于版本检测和启动。"
+msgstr ""
 
 msgid "Plugin name shown in frps logs."
-msgstr "插件名称，将显示在 frps 日志中。"
+msgstr ""
 
 msgid "Port used for HTTP vhost routing (also used by HTTP plugins)."
-msgstr "HTTP 虚拟主机路由端口（HTTP 插件也使用）。"
+msgstr ""
 
 msgid "Port used for HTTPS vhost routing."
-msgstr "HTTPS 虚拟主机路由端口。"
+msgstr ""
 
 msgid "Private key for dashboard HTTPS."
-msgstr "仪表盘 HTTPS 私钥文件。"
+msgstr ""
 
 msgid "Private key matching the TLS certificate."
-msgstr "与 TLS 证书匹配的私钥文件。"
+msgstr ""
 
 msgid "Private key used by the SSH gateway."
-msgstr "SSH 网关使用的私钥文件。"
+msgstr ""
 
 msgid "Proxy bind address"
-msgstr "代理绑定地址"
+msgstr ""
 
 msgid "QUIC bind port"
-msgstr "QUIC 绑定端口"
+msgstr ""
 
 msgid "QUIC keepalive period (s)"
-msgstr "QUIC keepalive 间隔（秒）"
+msgstr ""
 
 msgid "QUIC max idle timeout (s)"
-msgstr "QUIC 最大空闲超时（秒）"
+msgstr ""
 
 msgid "QUIC max incoming streams"
-msgstr "QUIC 最大入站流数"
+msgstr ""
 
 msgid "Raw TOML assignment lines appended to generated config"
-msgstr "附加到生成配置的原始 TOML 赋值行"
+msgstr ""
 
 msgid "Read token from this file instead of inline token; cannot be used with auth_token."
-msgstr "从文件读取 token，不能与内联 token 同时使用。"
+msgstr ""
 
 msgid "Read/write timeout for HTTP/HTTPS requests in seconds."
-msgstr "HTTP/HTTPS 请求的读写超时（秒）。"
+msgstr ""
 
 msgid "Retention window (hours) for NAT hole punching analysis data."
-msgstr "NAT 打洞分析数据的保留时长（小时）。"
+msgstr ""
 
 msgid "Return detailed error messages to frpc instead of generic codes."
-msgstr "向 frpc 返回详细错误而非通用错误码。"
+msgstr ""
 
 msgid "Reuse one TCP connection for multiple streams; reduces connection overhead."
-msgstr "在单个 TCP 连接上复用多路流，减少建连开销。"
+msgstr ""
 
 msgid "Rotate or delete logs after N days; 0 keeps all logs."
-msgstr "N 天后轮换或删除日志，0 表示不清理。"
+msgstr ""
 
 msgid "Run daemon as user"
-msgstr "以用户身份运行"
+msgstr ""
 
 msgid "Run frps under this system user (drops privileges after start)."
-msgstr "以该系统用户运行 frps（启动后降权）。"
+msgstr ""
 
 msgid "Running"
-msgstr "服务正在运行"
+msgstr ""
 
 msgid "SO_KEEPALIVE interval; negative disables TCP keepalive."
-msgstr "SO_KEEPALIVE 间隔；为负则禁用 TCP keepalive。"
+msgstr ""
 
 msgid "SSH gateway authorized keys file"
-msgstr "SSH 网关 authorized_keys 文件"
+msgstr ""
 
 msgid "SSH gateway auto-gen key path"
-msgstr "SSH 网关自动生成密钥路径"
+msgstr ""
 
 msgid "SSH gateway private key file"
-msgstr "SSH 网关私钥文件"
+msgstr ""
 
 msgid "SSH tunnel gateway port"
-msgstr "SSH 网关端口"
+msgstr ""
 
 msgid "Server certificate file for TLS listener."
-msgstr "TLS 监听的服务器证书文件。"
+msgstr ""
 
 msgid "Shared token for token-based auth; leave empty if using OIDC."
-msgstr "基于 token 认证的共享口令，使用 OIDC 时留空。"
+msgstr ""
 
 msgid "Skip validation of token expiration time (not recommended)."
-msgstr "跳过 token 过期时间检查（不推荐）。"
+msgstr ""
 
 msgid "Skip validation of token issuer (not recommended)."
-msgstr "跳过 token issuer 检查（不推荐）。"
+msgstr ""
 
 msgid "Strip ANSI color codes from log output."
-msgstr "去除日志中的 ANSI 颜色代码。"
+msgstr ""
 
 msgid "Subdomain host"
-msgstr "子域名"
+msgstr ""
 
 msgid "TCP fast open"
-msgstr "TCP 快速打开 (TFO)"
+msgstr ""
 
 msgid "TCP fast open queue"
-msgstr "TCP 快速打开队列"
+msgstr ""
 
 msgid "TCP keepalive (s)"
-msgstr "TCP keepalive（秒）"
+msgstr ""
 
 msgid "TCP mux"
-msgstr "TCP 复用"
+msgstr ""
 
 msgid "TCP mux keepalive interval (s)"
-msgstr "TCP 复用 keepalive 间隔（秒）"
+msgstr ""
 
 msgid "TCPMux HTTP CONNECT port"
-msgstr "TCPMux HTTP CONNECT 端口"
+msgstr ""
 
 msgid "TCPMux passthrough"
-msgstr "TCPMux 透传"
+msgstr ""
 
 msgid "TLS cert file"
-msgstr "TLS 证书文件"
+msgstr ""
 
 msgid "TLS force"
-msgstr "强制 TLS"
+msgstr ""
 
 msgid "TLS key file"
-msgstr "TLS 私钥文件"
+msgstr ""
 
 msgid "TLS trusted CA file"
-msgstr "TLS 信任的 CA 文件"
+msgstr ""
 
 msgid "TLS verify"
-msgstr "验证 TLS"
+msgstr ""
 
 msgid "Timeout for frpc heartbeats; negative disables app-layer heartbeat."
-msgstr "frpc 心跳超时时间；为负禁用应用层心跳。"
+msgstr ""
 
 msgid "Timeout for proxy user connections; increase for slow clients."
-msgstr "代理用户连接的超时时间，慢速客户端可适当增大。"
+msgstr ""
 
 msgid "Token source file"
-msgstr "令牌来源文件"
+msgstr ""
 
 msgid "Trace"
-msgstr "追踪"
+msgstr ""
 
 msgid "Transport Options"
-msgstr "传输选项"
+msgstr ""
 
 msgid "UDP packet size"
-msgstr "UDP 包大小"
+msgstr ""
 
 msgid "UDP port for KCP transport; leave empty to disable KCP."
-msgstr "KCP 传输使用的 UDP 端口；留空禁用 KCP。"
+msgstr ""
 
 msgid "UDP port for QUIC transport; leave empty to disable QUIC."
-msgstr "QUIC 传输使用的 UDP 端口；留空禁用 QUIC。"
+msgstr ""
 
 msgid "Upper bound for each proxy's work-connection pool_count requested by clients; higher values are capped here."
-msgstr "限制每个代理的工作连接池大小；frpc 请求超过该值会被截断。"
+msgstr ""
 
 msgid "User connection timeout (s)"
-msgstr "用户连接超时（秒）"
+msgstr ""
 
 msgid "Verify TLS certificate when calling the plugin backend."
-msgstr "调用插件后端时验证其 TLS 证书。"
+msgstr ""
 
 msgid "Version: %s"
-msgstr "版本：%s"
+msgstr ""
 
 msgid "Vhost HTTP port"
-msgstr "Vhost HTTP 端口"
+msgstr ""
 
 msgid "Vhost HTTP timeout (s)"
-msgstr "Vhost HTTP 超时时间（秒）"
+msgstr ""
 
 msgid "Vhost HTTPS port"
-msgstr "Vhost HTTPS 端口"
+msgstr ""
 
 msgid "Vhost Options"
-msgstr "Vhost 选项"
+msgstr ""
 
 msgid "Warn"
-msgstr "警告"
+msgstr ""
 
 msgid "Web TLS cert file"
-msgstr "Web TLS 证书文件"
+msgstr ""
 
 msgid "Web TLS key file"
-msgstr "Web TLS 私钥文件"
+msgstr ""
 
 msgid "Web addr"
-msgstr "Web 地址"
+msgstr ""
 
 msgid "Web assets dir"
-msgstr "Web 资源目录"
+msgstr ""
 
 msgid "Web password"
-msgstr "Web 密码"
+msgstr ""
 
 msgid "Web port"
-msgstr "Web 端口"
+msgstr ""
 
 msgid "Web user"
-msgstr "Web 用户"
+msgstr ""
 
 msgid "Web/Dashboard"
-msgstr "Web/仪表盘"
+msgstr ""
 
 msgid "Where to auto-generate SSH gateway key if none exists."
-msgstr "若无密钥，在此路径自动生成 SSH 网关密钥。"
+msgstr ""
 
 msgid "Whitelist of allowed listen ports for clients; empty means no restriction."
-msgstr "允许客户端监听的端口白名单；留空不限制。"
+msgstr ""
 
 msgid "Write frps logs to a file; disable to log to console."
-msgstr "将 frps 日志写入文件；关闭后输出到控制台。"
+msgstr ""
 
 msgid "authorized_keys file used to validate SSH gateway logins."
-msgstr "用于校验 SSH 网关登录的 authorized_keys 文件。"
+msgstr ""
